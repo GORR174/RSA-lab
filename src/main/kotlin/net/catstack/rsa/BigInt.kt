@@ -1,26 +1,45 @@
 package net.catstack.rsa
 
-class BigInt(numString: String) {
+import kotlin.math.absoluteValue
+
+class BigInt {
     val nums: ArrayList<Byte> = ArrayList()
     val isNegative: Boolean
 
-    init {
+    constructor(numString: String) {
         var tempNumString = numString
 
         if (tempNumString.startsWith("-")) {
             tempNumString = tempNumString.substring(1)
-            isNegative = true
+            isNegative = numString.length != 2 || numString[1] != '0'
         } else {
             isNegative = false
         }
 
-        var trimZero = numString.length > 1
+        var trimZero = tempNumString.length > 1
         tempNumString.forEach {
             if (trimZero && it == '0')
                 return@forEach
             if (trimZero && it != '0')
                 trimZero = false
             nums.add(it.toString().toByte())
+        }
+    }
+
+    constructor(num: Int) {
+        if (num == 0) {
+            nums.add(0)
+            isNegative = false
+            return
+        }
+
+        isNegative = num < 0
+
+        var tempNum = num.absoluteValue
+
+        while (tempNum > 0) {
+            nums.add(0, (tempNum % 10).toByte())
+            tempNum /= 10
         }
     }
 
