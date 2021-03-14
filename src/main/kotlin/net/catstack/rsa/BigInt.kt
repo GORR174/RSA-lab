@@ -10,14 +10,16 @@ class BigInt {
     constructor(numString: String) {
         var tempNumString = numString
 
+        var isNegative: Boolean
+
         if (tempNumString.startsWith("-")) {
             tempNumString = tempNumString.substring(1)
-            isNegative = numString.length != 2 || numString[1] != '0'
+            isNegative = true
         } else {
             isNegative = false
         }
 
-        var trimZero = tempNumString.length > 1
+        var trimZero = true
         tempNumString.forEach {
             if (trimZero && it == '0')
                 return@forEach
@@ -25,6 +27,13 @@ class BigInt {
                 trimZero = false
             nums.add(it.toString().toByte())
         }
+
+        if (nums.size == 0) {
+            nums.add(0)
+            isNegative = false
+        }
+
+        this.isNegative = isNegative
     }
 
     constructor(num: Int) {
@@ -151,6 +160,56 @@ class BigInt {
         val isNegative = this.isNegative != other.isNegative
 
         return BigInt(result.nums, isNegative)
+    }
+
+    operator fun div(other: BigInt): BigInt {
+        if (this == ZERO)
+            return ZERO
+        if (other == ZERO)
+            throw IllegalArgumentException("Divide by zero")
+        if (other == ONE)
+            return this
+        if (other == NEGATIVE_ONE)
+            return this.negate()
+        val aNums = ArrayList<Byte>(nums)
+        val divider = if (other.isNegative) other.negate() else other
+        val result = ArrayList<Byte>()
+        result.add(0)
+
+        var divNum = BigInt.ZERO
+        while (aNums.size > 0) {
+            val firstNum = aNums.removeFirst()
+            divNum = BigInt(divNum.toString() + firstNum)
+            if (divNum < divider) {
+                result.add(0)
+                continue
+            }
+            if (divNum == divider) {
+                result.add(1)
+                divNum = ZERO
+            }
+            if (divNum >= divider) {
+                val closestDividerPair = findClosestDivider(divNum, divider)
+
+                result.add(closestDividerPair.first)
+                divNum -= closestDividerPair.second
+            }
+        }
+
+        val resultIsNegative = isNegative != other.isNegative
+
+        return BigInt("${if (resultIsNegative) "-" else ""}${result.joinToString(separator = "")}")
+    }
+
+    fun findClosestDivider(num: BigInt, divider: BigInt): Pair<Byte, BigInt> {
+        for (i in 9 downTo 1) {
+            val result = divider * BigInt(i)
+            if (result <= num) {
+                return Pair(i.toByte(), result)
+            }
+        }
+
+        throw IllegalArgumentException("first argument should be smaller than second argument")
     }
 
     fun timeByNumber(num: Int): BigInt {

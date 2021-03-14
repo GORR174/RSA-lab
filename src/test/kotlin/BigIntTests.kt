@@ -76,6 +76,26 @@ class BigIntTests {
     }
 
     @Test
+    fun divideTest() {
+        assertEquals(BigInt.ZERO, BigInt(49) / BigInt(50))
+        assertEquals(BigInt.ZERO, BigInt(49) / BigInt(-50))
+        assertEquals(BigInt.ZERO, BigInt(0) / BigInt(1))
+        assertEquals(BigInt.ZERO, BigInt(0) / BigInt(-1))
+        assertEquals(BigInt.ONE, BigInt(50) / BigInt(50))
+        assertEquals(BigInt.ONE, BigInt(51) / BigInt(50))
+        assertEquals(BigInt.ONE, BigInt(99) / BigInt(50))
+        assertEquals(BigInt(2), BigInt(100) / BigInt(50))
+        assertEquals(BigInt(3), BigInt(199) / BigInt(50))
+        assertEquals(BigInt(4), BigInt(200) / BigInt(50))
+        assertEquals(BigInt(-4), BigInt(-200) / BigInt(50))
+        assertEquals(BigInt(4), BigInt(-200) / BigInt(-50))
+        assertEquals(BigInt(-4), BigInt(200) / BigInt(-50))
+        assertEquals(BigInt(-200), BigInt(-200) / BigInt.ONE)
+        assertEquals(BigInt(200), BigInt(200) / BigInt(1))
+        assertThrows(IllegalArgumentException::class.java) { BigInt(10) / BigInt(0) }
+    }
+
+    @Test
     fun compareToTest() {
         assertTrue(BigInt("57382859327") == BigInt("57382859327"))
         assertTrue(BigInt("-57382859327") == BigInt("-57382859327"))
