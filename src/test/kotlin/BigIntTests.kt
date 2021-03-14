@@ -96,6 +96,14 @@ class BigIntTests {
     }
 
     @Test
+    fun remTest() {
+        assertEquals((49 % 50).toString(), (BigInt(49) % BigInt(50)).toString())
+        assertEquals((-49 % 50).toString(), (BigInt(-49) % BigInt(50)).toString())
+        assertEquals((-49 % -50).toString(), (BigInt(-49) % BigInt(-50)).toString())
+        assertEquals((49 % -50).toString(), (BigInt(49) % BigInt(-50)).toString())
+    }
+
+    @Test
     fun compareToTest() {
         assertTrue(BigInt("57382859327") == BigInt("57382859327"))
         assertTrue(BigInt("-57382859327") == BigInt("-57382859327"))

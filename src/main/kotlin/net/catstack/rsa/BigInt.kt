@@ -162,6 +162,32 @@ class BigInt {
         return BigInt(result.nums, isNegative)
     }
 
+    fun findClosestDivider(num: BigInt, divider: BigInt): Pair<Byte, BigInt> {
+        for (i in 9 downTo 1) {
+            val result = divider * BigInt(i)
+            if (result <= num) {
+                return Pair(i.toByte(), result)
+            }
+        }
+
+        throw IllegalArgumentException("first argument should be smaller than second argument")
+    }
+
+    fun timeByNumber(num: Int): BigInt {
+        if (num < 0 || num > 9)
+            throw IllegalArgumentException("Number must be in (0..9) range")
+        if (num == 0)
+            return BigInt.ZERO
+        if (num == 1)
+            return this
+        var result = this
+        repeat(num - 1) {
+            result += this
+        }
+
+        return result
+    }
+
     operator fun div(other: BigInt): BigInt {
         if (this == ZERO)
             return ZERO
@@ -201,31 +227,7 @@ class BigInt {
         return BigInt("${if (resultIsNegative) "-" else ""}${result.joinToString(separator = "")}")
     }
 
-    fun findClosestDivider(num: BigInt, divider: BigInt): Pair<Byte, BigInt> {
-        for (i in 9 downTo 1) {
-            val result = divider * BigInt(i)
-            if (result <= num) {
-                return Pair(i.toByte(), result)
-            }
-        }
-
-        throw IllegalArgumentException("first argument should be smaller than second argument")
-    }
-
-    fun timeByNumber(num: Int): BigInt {
-        if (num < 0 || num > 9)
-            throw IllegalArgumentException("Number must be in (0..9) range")
-        if (num == 0)
-            return BigInt.ZERO
-        if (num == 1)
-            return this
-        var result = this
-        repeat(num - 1) {
-            result += this
-        }
-
-        return result
-    }
+    operator fun rem(other: BigInt) = this - other * (this / other)
 
     fun timesBy10(countOf10: Int): BigInt {
         val resultNums = ArrayList<Byte>(nums)
@@ -235,6 +237,8 @@ class BigInt {
 
         return BigInt(resultNums, isNegative)
     }
+
+
 
     override fun toString(): String {
         val sb = StringBuilder()
