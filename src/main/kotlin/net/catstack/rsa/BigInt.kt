@@ -1,5 +1,6 @@
 package net.catstack.rsa
 
+import java.lang.IllegalArgumentException
 import kotlin.math.absoluteValue
 
 class BigInt {
@@ -43,6 +44,13 @@ class BigInt {
         }
     }
 
+    constructor(numArray: ArrayList<Byte>, isNegative: Boolean = false) {
+        this.nums.clear()
+        this.nums.addAll(numArray)
+
+        this.isNegative = isNegative
+    }
+
     companion object {
         val ZERO = BigInt("0")
         val ONE = BigInt("1")
@@ -74,7 +82,7 @@ class BigInt {
         return super.equals(other)
     }
 
-    fun negate() = BigInt(if (isNegative) toString().substring(1) else "-${toString()}")
+    fun negate() = BigInt(nums, !isNegative)
 
     operator fun plus(other: BigInt): BigInt {
         val aNums = ArrayList<Byte>(nums)
@@ -130,6 +138,44 @@ class BigInt {
     }
 
     operator fun minus(other: BigInt) = this + other.negate()
+
+    operator fun times(other: BigInt): BigInt {
+        var result = BigInt.ZERO
+
+        other.nums.forEachIndexed { index, num ->
+            var buffer = timeByNumber(num.toInt())
+            buffer = buffer.timesBy10(other.nums.lastIndex - index)
+            result += buffer
+        }
+
+        val isNegative = this.isNegative != other.isNegative
+
+        return BigInt(result.nums, isNegative)
+    }
+
+    fun timeByNumber(num: Int): BigInt {
+        if (num < 0 || num > 9)
+            throw IllegalArgumentException("Number must be in (0..9) range")
+        if (num == 0)
+            return BigInt.ZERO
+        if (num == 1)
+            return this
+        var result = this
+        repeat(num - 1) {
+            result += this
+        }
+
+        return result
+    }
+
+    fun timesBy10(countOf10: Int): BigInt {
+        val resultNums = ArrayList<Byte>(nums)
+        repeat(countOf10) {
+            resultNums.add(0)
+        }
+
+        return BigInt(resultNums, isNegative)
+    }
 
     override fun toString(): String {
         val sb = StringBuilder()

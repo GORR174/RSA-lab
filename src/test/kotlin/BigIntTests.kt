@@ -1,6 +1,8 @@
 import net.catstack.rsa.BigInt
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.lang.IllegalArgumentException
 
 class BigIntTests {
     @Test
@@ -21,6 +23,13 @@ class BigIntTests {
         assertTrue(BigInt(0) == BigInt("-0"))
         assertTrue(BigInt(398256135) == BigInt("398256135"))
         assertTrue(BigInt(-398256135) == BigInt("-398256135"))
+    }
+
+    @Test
+    fun arrayCreationTest() {
+        assertTrue(BigInt(arrayListOf(0)) == BigInt("0"))
+        assertTrue(BigInt(arrayListOf(3, 9, 8, 2, 5, 6, 1, 3, 5)) == BigInt("398256135"))
+        assertTrue(BigInt(arrayListOf(3, 9, 8, 2, 5, 6, 1, 3, 5), true) == BigInt("-398256135"))
     }
 
     @Test
@@ -50,6 +59,20 @@ class BigIntTests {
         assertEquals(BigInt.ZERO, BigInt("100") - BigInt("100"))
         assertEquals(BigInt.ZERO, BigInt("-100") - BigInt("-100"))
         assertEquals(BigInt(99), BigInt(100) - BigInt(1))
+    }
+
+    @Test
+    fun timesTest() {
+        assertEquals(BigInt("234163056408576"), BigInt(123456) * BigInt(1896732896))
+        assertEquals(BigInt("-234163056408576"), BigInt(-123456) * BigInt(1896732896))
+        assertEquals(BigInt("234163056408576"), BigInt(-123456) * BigInt(-1896732896))
+        assertEquals(BigInt("-234163056408576"), BigInt(123456) * BigInt(-1896732896))
+        assertEquals(BigInt.ZERO, BigInt(123456) * BigInt(-0))
+        assertEquals(BigInt.ZERO, BigInt(123456) * BigInt(0))
+        assertEquals(BigInt.ZERO, BigInt(-0) * BigInt(1896732896))
+        assertEquals(BigInt.ZERO, BigInt(0) * BigInt(1896732896))
+        assertEquals(BigInt(1896732896), BigInt(1) * BigInt(1896732896))
+        assertEquals(BigInt(-1896732896), BigInt(-1) * BigInt(1896732896))
     }
 
     @Test
