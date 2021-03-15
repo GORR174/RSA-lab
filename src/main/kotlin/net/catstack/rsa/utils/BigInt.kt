@@ -1,4 +1,4 @@
-package net.catstack.rsa
+package net.catstack.rsa.utils
 
 import java.lang.IllegalArgumentException
 import kotlin.math.absoluteValue
@@ -149,7 +149,7 @@ class BigInt {
     operator fun minus(other: BigInt) = this + other.negate()
 
     operator fun times(other: BigInt): BigInt {
-        var result = BigInt.ZERO
+        var result = ZERO
 
         other.nums.forEachIndexed { index, num ->
             var buffer = timeByNumber(num.toInt())
@@ -177,7 +177,7 @@ class BigInt {
         if (num < 0 || num > 9)
             throw IllegalArgumentException("Number must be in (0..9) range")
         if (num == 0)
-            return BigInt.ZERO
+            return ZERO
         if (num == 1)
             return this
         var result = this
@@ -202,7 +202,7 @@ class BigInt {
         val result = ArrayList<Byte>()
         result.add(0)
 
-        var divNum = BigInt.ZERO
+        var divNum = ZERO
         while (aNums.size > 0) {
             val firstNum = aNums.removeFirst()
             divNum = BigInt(divNum.toString() + firstNum)
@@ -266,6 +266,17 @@ class BigInt {
             x += m0
 
         return x
+    }
+
+    infix fun pow(other: BigInt): BigInt {
+        var i = ONE
+        var result = this
+        while (i < other) {
+            result *= this
+            i += ONE
+        }
+
+        return result
     }
 
     override fun toString(): String {
