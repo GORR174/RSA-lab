@@ -238,7 +238,35 @@ class BigInt {
         return BigInt(resultNums, isNegative)
     }
 
+    infix fun modInverse(module: BigInt): BigInt {
+        if (module == ONE)
+            return ZERO
 
+        val m0 = module
+        var m = module
+        var y = ZERO
+        var x = ONE
+
+        var a = this
+
+        while (a > ONE) {
+            var q = a / m
+
+            var t = m
+
+            m = a % m
+            a = t
+            t = y
+
+            y = x - q * y
+            x = t
+        }
+
+        if (x < ZERO)
+            x += m0
+
+        return x
+    }
 
     override fun toString(): String {
         val sb = StringBuilder()
