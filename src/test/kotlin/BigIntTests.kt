@@ -2,6 +2,7 @@ import net.catstack.rsa.utils.BigInt
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.lang.IllegalArgumentException
+import java.math.BigInteger
 
 class BigIntTests {
     @Test
@@ -102,6 +103,21 @@ class BigIntTests {
         assertEquals((-49 % 50).toString(), (BigInt(-49) % BigInt(50)).toString())
         assertEquals((-49 % -50).toString(), (BigInt(-49) % BigInt(-50)).toString())
         assertEquals((49 % -50).toString(), (BigInt(49) % BigInt(-50)).toString())
+    }
+
+    @Test
+    fun moduloInverse() {
+        assertEquals(BigInteger("13").modInverse(BigInteger("17")).toString(), (BigInt(13) modInverse BigInt(17)).toString())
+        assertEquals(BigInteger("27").modInverse(BigInteger("31")).toString(), (BigInt(27) modInverse BigInt(31)).toString())
+    }
+
+    @Test
+    fun powTest() {
+        assertEquals(BigInt(1), BigInt(5) pow BigInt(0))
+        assertEquals(BigInt(5), BigInt(5) pow BigInt(1))
+        assertEquals(BigInt(25), BigInt(5) pow BigInt(2))
+        assertEquals(BigInt(125), BigInt(5) pow BigInt(3))
+        assertEquals(BigInteger("23985791385").pow(108).toString(), (BigInt("23985791385") pow BigInt(108)).toString())
     }
 
     @Test

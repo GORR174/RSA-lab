@@ -242,7 +242,6 @@ class BigInt {
         if (module == ONE)
             return ZERO
 
-        val m0 = module
         var m = module
         var y = ZERO
         var x = ONE
@@ -250,7 +249,7 @@ class BigInt {
         var a = this
 
         while (a > ONE) {
-            var q = a / m
+            val q = a / m
 
             var t = m
 
@@ -263,14 +262,14 @@ class BigInt {
         }
 
         if (x < ZERO)
-            x += m0
+            x += module
 
         return x
     }
 
     infix fun pow(other: BigInt): BigInt {
-        var i = ONE
-        var result = this
+        var i = ZERO
+        var result = ONE
         while (i < other) {
             result *= this
             i += ONE
