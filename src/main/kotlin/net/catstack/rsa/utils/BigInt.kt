@@ -3,10 +3,17 @@ package net.catstack.rsa.utils
 import java.lang.IllegalArgumentException
 import kotlin.math.absoluteValue
 
+/***
+ * Класс, необходимый для работы с большими числами
+ */
 class BigInt {
     val nums: ArrayList<Byte> = ArrayList()
     val isNegative: Boolean
 
+    /***
+     * Конструктор, создающий BigInt из строкового представления числа
+     * @param numString - строка, которая будет преобразована в BigInt
+     */
     constructor(numString: String) {
         var tempNumString = numString
 
@@ -36,6 +43,10 @@ class BigInt {
         this.isNegative = isNegative
     }
 
+    /***
+     * Конструктор, создающий BigInt из числа в формате Int
+     * @param num - число, из которого будет создан BigInt
+     */
     constructor(num: Int) {
         if (num == 0) {
             nums.add(0)
@@ -53,6 +64,11 @@ class BigInt {
         }
     }
 
+    /***
+     * Конструктор, создающий BigInt из списка цифр
+     * @param numArray - список цифр
+     * @param isNegative - флаг, подчёркивающий положительность или отрицательность числа
+     */
     constructor(numArray: ArrayList<Byte>, isNegative: Boolean = false) {
         this.nums.clear()
         this.nums.addAll(numArray)
@@ -66,6 +82,11 @@ class BigInt {
         val NEGATIVE_ONE = BigInt("-1")
     }
 
+    /***
+     * Переопределения операторов сравнения (>, >=, <, <=, ==, !=)
+     * @param other - число, с которым сравниваем число, на котором вызвали метод
+     * @return возвращает отрицательное число, если a < b, положительное число, если a > b, 0 если числа равны
+     */
     operator fun compareTo(other: BigInt): Int {
         if (isNegative && !other.isNegative)
             return -1
@@ -85,14 +106,28 @@ class BigInt {
         return 0
     }
 
+    /***
+     * Переопределение метода для сравнения чисел по значению
+     * @param other - число, с которым сравниваем число, на котором вызвали метод
+     * @return возвращает true, если числа равны
+     */
     override fun equals(other: Any?): Boolean {
         if (other is BigInt)
             return compareTo(other) == 0
         return super.equals(other)
     }
 
+    /***
+     * Функция для изменения знака числа
+     * @return число с противоположным знаком
+     */
     fun negate() = BigInt(nums, !isNegative)
 
+    /***
+     * Оператор сложения двух чисел
+     * @param other - число, которое складывается с числом, на котором вызвали метод
+     * @return сумма двух чисел
+     */
     operator fun plus(other: BigInt): BigInt {
         val aNums = ArrayList<Byte>(nums)
         val bNums = ArrayList<Byte>(other.nums)
@@ -146,8 +181,18 @@ class BigInt {
         return BigInt("${if (resultIsNegative) "-" else ""}${result.joinToString(separator = "")}")
     }
 
+    /***
+     * Оператор разности двух чисел
+     * @param other - вычитаемое число
+     * @return разность двух чисел
+     */
     operator fun minus(other: BigInt) = this + other.negate()
 
+    /***
+     * Оператор умножения двух чисел
+     * @param other - число, на которое умножаем число, у которого вызвали метод
+     * @return произведение двух чисел
+     */
     operator fun times(other: BigInt): BigInt {
         var result = ZERO
 
@@ -162,17 +207,12 @@ class BigInt {
         return BigInt(result.nums, isNegative)
     }
 
-    fun findClosestDivider(num: BigInt, divider: BigInt): Pair<Byte, BigInt> {
-        for (i in 9 downTo 1) {
-            val result = divider * BigInt(i)
-            if (result <= num) {
-                return Pair(i.toByte(), result)
-            }
-        }
-
-        throw IllegalArgumentException("first argument should be smaller than second argument")
-    }
-
+    /***
+     * Функция умножения числа на цифру
+     * @param num - цифра для умножения
+     * @return результат произведения на цифру
+     * @exception IllegalArgumentException - ошибка выбрасывается, если параметр num не в диапазоне от 0 до 9
+     */
     fun timeByNumber(num: Int): BigInt {
         if (num < 0 || num > 9)
             throw IllegalArgumentException("Number must be in (0..9) range")
@@ -188,6 +228,26 @@ class BigInt {
         return result
     }
 
+    /***
+     * Функция умножения числа на степень десятки
+     * @param countOf10 степень десятки
+     * @return результат умножения
+     */
+    fun timesBy10(countOf10: Int): BigInt {
+        val resultNums = ArrayList<Byte>(nums)
+        repeat(countOf10) {
+            resultNums.add(0)
+        }
+
+        return BigInt(resultNums, isNegative)
+    }
+
+    /***
+     * Функция деления на число
+     * @param other - делитель
+     * @return результат деления
+     * @exception IllegalArgumentException - выкидывается при делении на 0
+     */
     operator fun div(other: BigInt): BigInt {
         if (this == ZERO)
             return ZERO
@@ -227,17 +287,35 @@ class BigInt {
         return BigInt("${if (resultIsNegative) "-" else ""}${result.joinToString(separator = "")}")
     }
 
-    operator fun rem(other: BigInt) = this - other * (this / other)
-
-    fun timesBy10(countOf10: Int): BigInt {
-        val resultNums = ArrayList<Byte>(nums)
-        repeat(countOf10) {
-            resultNums.add(0)
+    /***
+     * Функция, возвращающая ближайшую цифру, при умножении на которую будет наибольший делитель для числа
+     * @param num - число, к которому мы ищем наибольший делитель
+     * @param divider - делитель
+     * @return возвращает пару чисел, где первое число - цифра, на которую нужно умножить делитель, а второе число - результат умножения
+     * @exception IllegalArgumentException - неверные аргументы
+     */
+    fun findClosestDivider(num: BigInt, divider: BigInt): Pair<Byte, BigInt> {
+        for (i in 9 downTo 1) {
+            val result = divider * BigInt(i)
+            if (result <= num) {
+                return Pair(i.toByte(), result)
+            }
         }
 
-        return BigInt(resultNums, isNegative)
+        throw IllegalArgumentException("first argument should be smaller than second argument")
     }
 
+    /***
+     * Функция, вычисляющая остаток от деления
+     * @param other - делитель
+     * @return остаток от деления
+     */
+    operator fun rem(other: BigInt) = this - other * (this / other)
+
+    /***
+     * Функция, возвращающая обратное по модулю число. Функция использует расширенный алгоритм Евклида.
+     * @param module - модуль, по которому необходимо найти обратное число
+     */
     infix fun modInverse(module: BigInt): BigInt {
         if (module == ONE)
             return ZERO
@@ -267,6 +345,11 @@ class BigInt {
         return x
     }
 
+    /***
+     * Функция возведения в степень
+     * @param other - степень числа
+     * @return результат возведения в степень
+     */
     infix fun pow(other: BigInt): BigInt {
         var i = ZERO
         var result = ONE
@@ -278,6 +361,10 @@ class BigInt {
         return result
     }
 
+    /***
+     * Переопределяем метод toString для превращения объекта в строку (например для дальнейшего вывода числа в консоль)
+     * @return строковое представление числа
+     */
     override fun toString(): String {
         val sb = StringBuilder()
         if (isNegative)
@@ -286,6 +373,10 @@ class BigInt {
         return sb.toString()
     }
 
+    /***
+     * Функция для вычисления хеша объекта (для одинаковых объектов должен быть одинаковый хеш код)
+     * @return хеш код числа
+     */
     override fun hashCode(): Int {
         var result = nums.hashCode()
         result = 31 * result + isNegative.hashCode()

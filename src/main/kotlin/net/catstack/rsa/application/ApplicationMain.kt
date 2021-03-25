@@ -27,6 +27,9 @@ class ApplicationMain : Application {
 
     val scanner = Scanner(System.`in`, "windows-1251")
 
+    /***
+     * Метод, который вызывается при запуске приложения (вызывается из метода main)
+     */
     override fun run() {
         println("+------------------------------------+")
         println("|           RSA шифрование           |")
@@ -60,6 +63,9 @@ class ApplicationMain : Application {
         println("Спасибо за использование!")
     }
 
+    /***
+     * Меню шифрования числа
+     */
     private fun cryptNumber() {
         println("+------------------------------------+")
         println("|          Зашифровать число         |")
@@ -82,6 +88,9 @@ class ApplicationMain : Application {
         scanner.nextLine()
     }
 
+    /***
+     * Меню шифрования текста
+     */
     private fun cryptText() {
         println("+------------------------------------+")
         println("|          Зашифровать текст         |")
@@ -104,6 +113,9 @@ class ApplicationMain : Application {
         scanner.nextLine()
     }
 
+    /***
+     * Меню шифрования файла
+     */
     private fun cryptTextFile() {
         println("+------------------------------------+")
         println("|          Зашифровать файл          |")
@@ -141,6 +153,9 @@ class ApplicationMain : Application {
         scanner.nextLine()
     }
 
+    /***
+     * Меню расшифровки файла
+     */
     fun decryptTextFile() {
         println("+------------------------------------+")
         println("|         Расшифровать файл          |")

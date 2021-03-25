@@ -1,18 +1,37 @@
 package net.catstack.rsa.crypt
 
 import net.catstack.rsa.models.PrivateKey
-import net.catstack.rsa.models.PublicKey
 import net.catstack.rsa.utils.BigInt
 import net.catstack.rsa.utils.symbolsDictionary
 
+/***
+ * Класс для дешифрования
+ * @property privateKey - приватный ключ, необходимый для шифровани
+ */
 class Decryptor(private val privateKey: PrivateKey) {
-    private var lastCount = 0
 
+    /***
+     * Функция расшифровки зашифрованного числа
+     * @param encryptedNumber - зашифрованное число
+     * @return расшифрованное число
+     */
     fun decrypt(encryptedNumber: BigInt) = (encryptedNumber pow privateKey.d) % privateKey.mod
+
+    /***
+     * Функция расшифровки зашифрованного числа
+     * @param encryptedNumber - зашифрованное число
+     * @return расшифрованное число
+     */
     fun decrypt(encryptedNumber: Int) = (BigInt(encryptedNumber) pow privateKey.d) % privateKey.mod
 
+    /***
+     * Функция расшифровки зашифрованного текста
+     * @param intArray - зашифрованный текст в формате массива зашифрованных чисел
+     * @param logProgress - при true создаёт динамическую полосу процесса расшифровки
+     * @return расшифрованный текст
+     */
     fun decryptString(intArray: IntArray, logProgress: Boolean = false): String {
-        lastCount = 0
+        var lastCount = 0
         if (logProgress)
             print("[--------------------]\r")
         val sb = StringBuilder()
