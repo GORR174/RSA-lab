@@ -13,7 +13,8 @@ class Decryptor(private val privateKey: PrivateKey) {
 
     fun decryptString(intArray: IntArray, logProgress: Boolean = false): String {
         lastCount = 0
-        print("[--------------------]\r")
+        if (logProgress)
+            print("[--------------------]\r")
         val sb = StringBuilder()
         intArray.forEach {
             sb.append(symbolsDictionary[decrypt(it).toString().toInt()])
@@ -35,7 +36,8 @@ class Decryptor(private val privateKey: PrivateKey) {
             }
         }
 
-        println("[--------100%--------]")
+        if (logProgress)
+            println("[--------100%--------]")
 
         return sb.toString()
     }

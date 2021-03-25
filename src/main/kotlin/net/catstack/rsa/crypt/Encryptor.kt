@@ -6,6 +6,7 @@ import net.catstack.rsa.utils.symbolsDictionary
 
 class Encryptor(private val publicKey: PublicKey) {
     fun encrypt(numToCrypt: BigInt) = (numToCrypt pow publicKey.e) % publicKey.mod
+
     fun encrypt(numToCrypt: Int) = (BigInt(numToCrypt) pow publicKey.e) % publicKey.mod
 
     fun encryptString(str: String): IntArray {

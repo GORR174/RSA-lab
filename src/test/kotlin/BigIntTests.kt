@@ -117,6 +117,7 @@ class BigIntTests {
         assertEquals(BigInt(5), BigInt(5) pow BigInt(1))
         assertEquals(BigInt(25), BigInt(5) pow BigInt(2))
         assertEquals(BigInt(125), BigInt(5) pow BigInt(3))
+        assertEquals(BigInt(625), BigInt(5) pow BigInt(4))
         assertEquals(BigInteger("23985791385").pow(108).toString(), (BigInt("23985791385") pow BigInt(108)).toString())
     }
 
